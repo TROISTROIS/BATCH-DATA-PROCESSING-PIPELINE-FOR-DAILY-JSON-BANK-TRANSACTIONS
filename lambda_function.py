@@ -13,7 +13,7 @@ def lambda_handler(event, context):
         current_date = start_date + timedelta(days=current_date)
         date_str = str(current_date)
         generate_data(current_date, date_str)
-        upload_to_s3(f"transactions_{date_str}.csv", current_date)
+        upload_to_s3(f"transactions_{date_str}.json", current_date)
 
     return {
         'statusCode': 200,
