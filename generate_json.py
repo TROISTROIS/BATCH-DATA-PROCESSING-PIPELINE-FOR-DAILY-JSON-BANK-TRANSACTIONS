@@ -6,6 +6,7 @@ from faker import Faker
 
 fake = Faker()
 
+transactions_per_day = 86
 # dictionary to put transactions and descriptions together
 banking_transactions = {
     "Withdrawals": ["Cash Withdrawal", "ATM Withdrawal", "Check Withdrawal"],
@@ -39,29 +40,28 @@ else:
     print("Value Not Found!")
 
 transaction_ids = []
-for _ in range(50):
+for _ in range(transactions_per_day):
     ids = fake.unique.bothify(text='T######')
     transaction_ids.append(ids)
 assert len(set(transaction_ids)) == len(transaction_ids)
 print(transaction_ids[:5])
 
 account_ids = []
-for _ in range(len(transaction_ids)):
+for _ in range(50):
     acc_ids = fake.bothify(text='A#####')
     account_ids.append(acc_ids)
 print(account_ids[:5])
 
-transactions_per_day = 74
 transaction_information = {}
 
-def generate_one_transaction(transaction_id, current_date):
-    if transaction_id not in transaction_information:
+def generate_one_transaction(account_id, current_date):
+    if account_id not in transaction_information:
         # generate information needed
-        transaction_information[transaction_id] = {
-            "account_id" : choice(account_ids)
+        transaction_information[account_id] = {
+            "transaction_id" : choice(transaction_ids)
         }
-    transaction_data = transaction_information[transaction_id].copy()
-    transaction_data["transaction_id"] = choice(transaction_ids)
+    transaction_data = transaction_information[account_id].copy()
+    transaction_data["account_id"] = choice(account_ids)
     transaction_date = str(current_date)
     transaction_data["date"] = transaction_date
     transaction_data["amount"] = round(random.uniform(10, 10000), 2)
@@ -74,13 +74,27 @@ def generate_one_transaction(transaction_id, current_date):
 def generate_transactions(num_transactions, current_date):
     transactions = []
     for _ in range(num_transactions):
-        transactions.append(generate_one_transaction(choice(transaction_ids), current_date))
+        transactions.append(generate_one_transaction(choice(account_ids), current_date))
     return transactions
 
 
+# def write_to_json(data, filename):
+#     with open(filename, 'a') as file:
+#         json.dump(data, file, indent=4)
+#     with open('mock data.json', 'r') as file:
+#         json.load(file)
+
 def write_to_json(data, filename):
+    try:
+        with open("mock data.json", 'r') as file:
+            existing_data = json.load(file)
+    except FileNotFoundError:
+        existing_data = []
+
+    updated_data = existing_data + data
+
     with open(filename, 'w') as file:
-        json.dump(data, file, indent=4)
+        json.dump(updated_data, file, indent=4)
 
 def generate_data(current_date, date_str):
     transactions = generate_transactions(transactions_per_day, current_date)
@@ -89,8 +103,8 @@ def generate_data(current_date, date_str):
     print(f"Generated mock transaction data transactions_{date_str}.json and saved in json files")
     return
 
-#
-# start_date = date(2024, 6, 25)  # Adjust start date
+
+# start_date = date(2024, 6, 26)  # Adjust start date
 # end_date = date.today()
 #
 # for current_date in range((end_date - start_date).days + 1):
