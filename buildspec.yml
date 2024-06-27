@@ -12,7 +12,7 @@ phases:
       - cd lib
       - zip -r9 ../deployment_package.zip .
       - cd ..
-      - zip -g deployment_package.zip *.py
+      - zip -g deployment_package.zip *.py mock data.json
   post_build:
     commands:
       - echo "Uploading to S3..."
