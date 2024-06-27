@@ -86,7 +86,7 @@ def generate_transactions(num_transactions, current_date):
 
 def write_to_json(data, filename):
     try:
-        with open("mock data.json", 'r') as file:
+        with open("/tmp/mock data.json", 'r') as file:
             existing_data = json.load(file)
     except FileNotFoundError:
         existing_data = []
