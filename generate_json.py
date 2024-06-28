@@ -3,6 +3,7 @@ import random
 from random import randint,choice
 from datetime import date, timedelta
 from faker import Faker
+import boto3
 
 fake = Faker()
 
@@ -77,26 +78,17 @@ def generate_transactions(num_transactions, current_date):
         transactions.append(generate_one_transaction(choice(account_ids), current_date))
     return transactions
 
-
-# def write_to_json(data, filename):
-#     with open(filename, 'a') as file:
-#         json.dump(data, file, indent=4)
-#     with open('mock data.json', 'r') as file:
-#         json.load(file)
-
+bucket = "json-test-mock"
+key = "mock_data.json"
+s3 = boto3.client('s3')
+response = s3.get_object(Bucket=bucket, Key=key)
+json_data = json.load(response['Body'])
 def write_to_json(data, filename):
-    try:
-        with open("s3://bank-transactions-json/mock data.json", 'r') as file:
-            existing_data = json.load(file)
-    except FileNotFoundError:
-        existing_data = []
 
-    updated_data = existing_data + data
+    updated_data = json_data + data
 
     with open(filename, 'w') as file:
         json.dump(updated_data, file, indent=4)
-
-
 
 def generate_data(current_date, date_str):
     transactions = generate_transactions(transactions_per_day, current_date)
