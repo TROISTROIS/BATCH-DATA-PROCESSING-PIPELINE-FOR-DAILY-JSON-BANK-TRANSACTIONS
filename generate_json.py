@@ -83,7 +83,7 @@ key = "mock_data.json"
 s3 = boto3.client('s3')
 response = s3.get_object(Bucket=bucket, Key=key)
 def write_to_json(data, filename):
-    with open(filename, 'r') as file:
+    with open(filename, 'w') as file:
         json_data = json.load(response['Body'])
 
     updated_data = json_data + data
