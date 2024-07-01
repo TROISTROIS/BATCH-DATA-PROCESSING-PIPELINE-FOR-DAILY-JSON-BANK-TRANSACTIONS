@@ -7,7 +7,7 @@ import boto3
 
 fake = Faker()
 
-transactions_per_day = 86
+transactions_per_day = 106
 # dictionary to put transactions and descriptions together
 banking_transactions = {
     "Withdrawals": ["Cash Withdrawal", "ATM Withdrawal", "Check Withdrawal"],
@@ -23,7 +23,7 @@ banking_transactions = {
     "Interest and Adjustments": ["Interest Credit", "Interest Debit", "Adjustments"]
 }
 
-print(banking_transactions)
+# print(banking_transactions)
 def find_transaction(description):
     for transaction, descriptions in banking_transactions.items():
         if description in descriptions:
@@ -32,26 +32,26 @@ def find_transaction(description):
 
 # Example usage:
 all_values = [value for sublist in banking_transactions.values() for value in sublist]
-print(all_values)
+# print(all_values)
 value = random.choice(all_values)
 key = find_transaction(value)
-if key:
-    print(f"The key for '{value}' is '{key}'")
-else:
-    print("Value Not Found!")
+# if key:
+#     print(f"The key for '{value}' is '{key}'")
+# else:
+#     print("Value Not Found!")
 
 transaction_ids = []
 for _ in range(transactions_per_day):
     ids = fake.unique.bothify(text='T######')
     transaction_ids.append(ids)
 assert len(set(transaction_ids)) == len(transaction_ids)
-print(transaction_ids[:5])
+# print(transaction_ids[:5])
 
 account_ids = []
 for _ in range(50):
     acc_ids = fake.bothify(text='A#####')
     account_ids.append(acc_ids)
-print(account_ids[:5])
+# print(account_ids[:5])
 
 transaction_information = {}
 
