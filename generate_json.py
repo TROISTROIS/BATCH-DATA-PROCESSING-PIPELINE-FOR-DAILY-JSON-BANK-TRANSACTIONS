@@ -92,32 +92,14 @@ def write_to_json(data, filename):
 
         # Read and parse the JSON content
         content = response['Body'].read().decode('utf-8')
-        data = json.loads(content)
-
-        return {
-            'statusCode': 200,
-            'body': json.dumps(data)
-        }
-
+        json_data = json.loads(content)
 
     except s3.exceptions.NoSuchKey:
         print(f"The object {key} does not exist in the bucket {bucket}.")
-        return {
-            'statusCode': 404,
-            'body': json.dumps(f"The object {key} does not exist in the bucket {bucket}.")
-        }
     except s3.exceptions.NoSuchBucket:
         print(f"The bucket {bucket} does not exist.")
-        return {
-            'statusCode': 404,
-            'body': json.dumps(f"The bucket {bucket} does not exist.")
-        }
     except Exception as e:
         print(f"An error occurred: {e}")
-        return {
-            'statusCode': 500,
-            'body': json.dumps(f"An error occurred: {e}")
-        }
 
 
     updated_data = json_data + data
